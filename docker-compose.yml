@@ -1,0 +1,39 @@
+services:
+  db:
+    container_name: b2b_db
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: b2btender
+    ports:
+      - '33:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    
+  pgadmin:
+    container_name: b2badmin
+    image: dpage/pgadmin4
+    depends_on:
+      - db
+    ports:
+      - "5055:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@root.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    restart: unless-stopped
+  
+  b2btenderbackend:
+    container_name: b2btenderbackend
+    build: .
+    depends_on:
+      - db
+    ports:
+      - '6007:6007'
+    env_file:
+      - .env
+
+
+volumes:
+  postgres-data:

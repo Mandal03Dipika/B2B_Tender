@@ -5,8 +5,6 @@ import { companySchema, searchCompaniesSchema } from "../validators/company";
 import { z } from "zod";
 
 export const createCompany = async (req: Request, res: Response) => {
-  console.log(req.body);
-
   try {
     const validated = companySchema.parse(req.body);
     const [company] = await db("companies")
